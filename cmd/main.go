@@ -64,7 +64,7 @@ func main() {
 	}
 
 	if options.ConfigPath == "" {
-		options.ConfigPath = "config/go-rpc-ancient.json"
+		options.ConfigPath = "config/app.json"
 	}
 	cfg, err := config.NewConfigWithSimpleFile(options.ConfigPath)
 	Must(err)
