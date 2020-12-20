@@ -4,12 +4,12 @@ version=$(shell git describe --tags | awk '{print(substr($$0,2,length($$0)))}')
 export GOPROXY=https://goproxy.cn
 
 define BUILD_VERSION
-  version: $(shell git describe --tags) [git describe --tags]
-gitremote: $(shell git remote -v | grep fetch | awk '{print $$2}') [git remote -v | grep fetch]
-   commit: $(shell git rev-parse HEAD) [git rev-parse HEAD]
- datetime: $(shell date '+%Y-%m-%d %H:%M:%S') [date]
- hostname: $(shell hostname):$(shell pwd) [hostname:pwd]
-goversion: $(shell go version) [go version]
+  version: $(shell git describe --tags)
+gitremote: $(shell git remote -v | grep fetch | awk '{print $$2}')
+   commit: $(shell git rev-parse HEAD)
+ datetime: $(shell date '+%Y-%m-%d %H:%M:%S')
+ hostname: $(shell hostname):$(shell pwd)
+goversion: $(shell go version)
 endef
 export BUILD_VERSION
 
