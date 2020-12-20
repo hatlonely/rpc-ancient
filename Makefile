@@ -31,7 +31,8 @@ codegen: api/ancient.proto submodule
 
 .PHONY: submodule
 submodule:
-	 git submodule update
+	git submodule init
+	git submodule update
 
 .PHONY: image
 image:
