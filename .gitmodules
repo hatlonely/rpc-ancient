@@ -1,3 +1,6 @@
 [submodule "rpc-api"]
 	path = rpc-api
 	url = git@github.com:hatlonely/rpc-api.git
+[submodule "op-deploy"]
+	path = op-deploy
+	url = git@github.com:hatlonely/op-deploy.git
