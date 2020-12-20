@@ -32,7 +32,7 @@ message UpdateAncientReq {
 message SearchAncientReq {
   string keyword = 1;
   int64 offset = 2;
-  int64 limit = 3 [(gogoproto.moretags) = "rule:\"x >= 0 && x <= 100\""];
+  int64 limit = 3 [(gogoproto.moretags) = "rule:\"x >= 0 && x <= 100\" dft:\"10\""];
 }
 
 message SearchAncientRes {

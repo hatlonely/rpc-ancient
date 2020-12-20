@@ -11,15 +11,19 @@ build: cmd/main.go Makefile vendor
 	go build -ldflags "-X 'main.Version=`sh scripts/version.sh`'" cmd/main.go && mv main build/bin/${binary} && cp -r config build/
 
 vendor: go.mod go.sum
-	@echo "install golang dependency"
 	go mod tidy
 	go mod vendor
 
-codegen: api/ancient.proto
+.PHONY: codegen
+codegen: api/ancient.proto submodule
 	mkdir -p api/gen/go && mkdir -p api/gen/swagger
-	protoc -I.. -I. --gofast_out=plugins=grpc,paths=source_relative:api/gen/go/ $<
-	protoc -I.. -I. --grpc-gateway_out=logtostderr=true,paths=source_relative:api/gen/go $<
-	protoc -I.. -I. --swagger_out=logtostderr=true:api/gen/swagger $<
+	protoc -Irpc-api -I. --gofast_out=plugins=grpc,paths=source_relative:api/gen/go/ $<
+	protoc -Irpc-api -I. --grpc-gateway_out=logtostderr=true,paths=source_relative:api/gen/go $<
+	protoc -Irpc-api -I. --swagger_out=logtostderr=true:api/gen/swagger $<
+
+.PHONY: submodule
+submodule:
+	 git submodule update
 
 .PHONY: image
 image:
