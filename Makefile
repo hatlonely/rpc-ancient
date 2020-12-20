@@ -1,8 +1,6 @@
 binary=ancient
-dockeruser=hatlonely
-gituser=hatlonely
-repository=go-rpc-ancient
-version=1.0.0
+repository=rpc-ancient
+version=$(shell git describe --tags | awk '{print(substr($$0,2,length($$0)))}')
 export GOPROXY=https://goproxy.cn
 
 .PHONY: build

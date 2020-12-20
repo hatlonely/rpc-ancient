@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export NAMESPACE="prod"
-export NAME="go-rpc-ancient"
+export NAME="rpc-ancient"
 export REGISTRY_SERVER="{{.registry.server}}"
 export REGISTRY_USERNAME="{{.registry.username}}"
 export REGISTRY_PASSWORD="{{.registry.password}}"
