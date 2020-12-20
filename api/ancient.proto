@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/hatlonely/go-rpc/rpc-ancient/api/gen/go/api";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "gogoproto/gogo.proto";
+
+
+message Ancient {
+  int64 id = 1 [(gogoproto.moretags) = "rule:\"x >= 0\""];
+  string title = 2;
+  string author = 3;
+  string dynasty = 4;
+  string content = 5;
+}
+
+message GetAncientReq {
+  int64 id = 1 [(gogoproto.moretags) = "rule:\"x >= 0\""];
+}
+
+message PutAncientReq {
+  Ancient ancient = 1;
+}
+
+message UpdateAncientReq {
+  Ancient ancient = 1;
+}
+
+message SearchAncientReq {
+  string keyword = 1;
+  int64 offset = 2;
+  int64 limit = 3 [(gogoproto.moretags) = "rule:\"x >= 0 && x <= 100\""];
+}
+
+message SearchAncientRes {
+  repeated Ancient ancients = 1;
+}
+
+service AncientService {
+  rpc GetAncient(GetAncientReq) returns (Ancient) {
+    option (google.api.http) = {
+      get: "/v1/ancient/{id}"
+    };
+  }
+
+  rpc PutAncient(PutAncientReq) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/v1/ancient"
+      body: "*"
+    };
+  }
+
+  rpc UpdateAncient(UpdateAncientReq) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/v1/ancient/{ancient.id}"
+      body: "ancient"
+      additional_bindings {
+        patch: "/v1/ancient/{ancient.id}"
+        body: "ancient"
+      }
+    };
+  }
+
+  rpc SearchAncient(SearchAncientReq) returns (SearchAncientRes) {
+    option (google.api.http) = {
+      get: "/v1/search"
+    };
+  }
+}
+

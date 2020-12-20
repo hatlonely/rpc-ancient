@@ -1,0 +1,65 @@
+{
+  "http": {
+    "port": 80
+  },
+  "grpc": {
+    "port": 6080
+  },
+  "mysql": {
+    "username": "root",
+    "password": "",
+    "database": "ancient",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "connMaxLifeTime": "60s",
+    "maxIdleConns": 10,
+    "maxOpenConns": 20
+  },
+  "elasticsearch": {
+    "uri": "http://127.0.0.1:9200"
+  },
+  "service": {
+    "elasticsearchIndex": "shici"
+  },
+  "logger": {
+    "grpc": {
+      "level": "Info",
+      "flatMap": true,
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/ancient.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }, {
+        "type": "ElasticSearch",
+        "elasticSearchWriter": {
+          "index": "grpc",
+          "idField": "requestID",
+          "timeout": "200ms",
+          "msgChanLen": 200,
+          "workerNum": 2,
+          "elasticSearch": {
+            "uri": "http://127.0.0.1:9200"
+          }
+        }
+      }]
+    },
+    "info": {
+      "level": "Info",
+      "writers": [{
+        "type": "RotateFile",
+        "rotateFileWriter": {
+          "filename": "log/ancient.rpc",
+          "maxAge": "24h",
+          "formatter": {
+            "type": "Json"
+          }
+        }
+      }]
+    }
+  }
+}
