@@ -8,7 +8,7 @@ image:
   pullPolicy: Always
 
 imagePullSecrets:
-  name: "${PULL_SECRETS}"
+  name: "${IMAGE_PULL_SECRET}"
 
 ingress:
   host: "${INGRESS_HOST}"
