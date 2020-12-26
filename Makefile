@@ -14,9 +14,13 @@ endef
 export BUILD_VERSION
 
 .PHONY: build
-build: cmd/main.go Makefile vendor
-	mkdir -p build/bin
-	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" cmd/main.go && mv main build/bin/${binary} && cp -r config build/
+build: cmd/main.go $(wildcard internal/*/*.go) Makefile vendor
+	mkdir -p build/bin && mkdir -p build/config
+	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/${binary} cmd/main.go
+	cp config/app.json build/config/ && cp config/base.json build/config/
+
+clean:
+	rm -rf build
 
 vendor: go.mod go.sum
 	go mod tidy
