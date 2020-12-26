@@ -1,4 +1,4 @@
-module github.com/hatlonely/go-rpc/rpc-ancient
+module github.com/hatlonely/rpc-ancient
 
 go 1.13
 

@@ -8,7 +8,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/pkg/errors"
 
-	"github.com/hatlonely/go-rpc/rpc-ancient/internal/storage"
+	"github.com/hatlonely/rpc-ancient/internal/storage"
 )
 
 type AncientService struct {

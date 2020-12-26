@@ -17,7 +17,7 @@ export BUILD_VERSION
 build: cmd/main.go $(wildcard internal/*/*.go) Makefile vendor
 	mkdir -p build/bin && mkdir -p build/config
 	go build -ldflags "-X 'main.Version=$$BUILD_VERSION'" -o build/bin/${binary} cmd/main.go
-	cp config/app.json build/config/ && cp config/base.json build/config/
+	cp config/app.json build/config/
 
 clean:
 	rm -rf build

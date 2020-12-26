@@ -9,7 +9,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/pkg/errors"
 
-	"github.com/hatlonely/go-rpc/rpc-ancient/api/gen/go/api"
+	"github.com/hatlonely/rpc-ancient/api/gen/go/api"
 )
 
 func split(s string) []string {

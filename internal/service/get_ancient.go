@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 
-	"github.com/hatlonely/go-rpc/rpc-ancient/api/gen/go/api"
-	"github.com/hatlonely/go-rpc/rpc-ancient/internal/storage"
+	"github.com/hatlonely/rpc-ancient/api/gen/go/api"
+	"github.com/hatlonely/rpc-ancient/internal/storage"
 )
 
 func (s *AncientService) GetAncient(ctx context.Context, req *api.GetAncientReq) (*api.Ancient, error) {

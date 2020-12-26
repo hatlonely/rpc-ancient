@@ -8,8 +8,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 
-	"github.com/hatlonely/go-rpc/rpc-ancient/api/gen/go/api"
-	"github.com/hatlonely/go-rpc/rpc-ancient/internal/storage"
+	"github.com/hatlonely/rpc-ancient/api/gen/go/api"
+	"github.com/hatlonely/rpc-ancient/internal/storage"
 )
 
 func (s *AncientService) UpdateAncient(ctx context.Context, req *api.UpdateAncientReq) (*empty.Empty, error) {
