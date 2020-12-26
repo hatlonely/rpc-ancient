@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "github.com/hatlonely/go-rpc/rpc-ancient/api/gen/go/api";
+option go_package = "github.com/hatlonely/rpc-ancient/api/gen/go/api";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
