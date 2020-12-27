@@ -5,7 +5,6 @@ go 1.13
 require (
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang/protobuf v1.4.3
-	github.com/gorilla/handlers v1.5.1
 	github.com/grpc-ecosystem/grpc-gateway v1.15.2
 	github.com/hatlonely/go-kit v1.0.16-0.20201223053551-eb3f4f4e8f9d
 	github.com/jinzhu/gorm v1.9.15
