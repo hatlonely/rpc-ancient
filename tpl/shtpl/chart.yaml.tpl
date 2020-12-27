@@ -3,7 +3,7 @@ name: "${NAME}"
 replicaCount: "${REPLICA_COUNT}"
 
 image:
-  repository: "${REGISTRY_SERVER}/${IMAGE_REPOSITORY}"
+  repository: "${REGISTRY_SERVER}/${REGISTRY_NAMESPACE}/${IMAGE_REPOSITORY}"
   tag: "${IMAGE_TAG}"
   pullPolicy: Always
 
