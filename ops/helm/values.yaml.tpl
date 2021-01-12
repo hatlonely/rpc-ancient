@@ -9,6 +9,7 @@ image:
   pullSecret: "${IMAGE_PULL_SECRET}"
 
 ingress:
+  enable: true
   host: "${INGRESS_HOST}"
   secretName: "${INGRESS_SECRET}"
 
