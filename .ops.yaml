@@ -1,0 +1,71 @@
+name: rpc-ancient
+
+dep:
+  ops:
+    type: git
+    url: "https://github.com/hatlonely/ops.git"
+    version: master
+
+env:
+  default:
+    NAME: "rpc-ancient"
+  prod:
+    NAMESPACE: "prod"
+    REGISTRY_SERVER: "{{.registry.server}}"
+    REGISTRY_USERNAME: "{{.registry.username}}"
+    REGISTRY_PASSWORD: "{{.registry.password}}"
+    REGISTRY_NAMESPACE: "{{.registry.namespace}}"
+    MYSQL_SERVER: "{{.mysql.server}}"
+    MYSQL_ROOT_PASSWORD: "{{.mysql.rootPassword}}"
+    MYSQL_USERNAME: "{{.mysql.username}}"
+    MYSQL_PASSWORD: "{{.mysql.password}}"
+    MYSQL_DATABASE: "ancient"
+    ELASTICSEARCH_SERVER: "elasticsearch-master:9200"
+    ELASTICSEARCH_INDEX: "shici"
+    REDIS_ADDRESS: "{{.redis.addr}}"
+    REDIS_PASSWORD: "{{.redis.password}}"
+    IMAGE_PULL_SECRET: "hatlonely-pull-secrets"
+    IMAGE_REPOSITORY: "rpc-ancient"
+    IMAGE_TAG: "$(git describe --tags | awk '{print(substr($0,2,length($0)))}')"
+    REPLICA_COUNT: 2
+    INGRESS_HOST: "k8s.ancient.hatlonely.com"
+    INGRESS_SECRET: "k8s-secret"
+    K8S_CONTEXT: "homek8s"
+
+task:
+  image:
+    step:
+      - make image
+      - docker login --username="${REGISTRY_USERNAME}" --password="${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+      - docker tag "${REGISTRY_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}" "${REGISTRY_SERVER}/${REGISTRY_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}"
+      - docker push "${REGISTRY_SERVER}/${REGISTRY_NAMESPACE}/${IMAGE_REPOSITORY}:${IMAGE_TAG}"
+  mysql:
+    step:
+      - sh ${DEP}/ops/tool/render.sh ops/sql/create_table.sql.tpl ${TMP}/sql/create_table.sql
+      - |
+        kubectl run -n prod -it --rm sql --image=mysql:5.7.30 --restart=Never -- \
+          mysql -uroot -h"${MYSQL_SERVER}" -p"${MYSQL_ROOT_PASSWORD}" -e "$(cat "tmp/${environment}/create_table.sql")"
+  restart:
+    step:
+      - kubectl get pods -n "${NAMESPACE}" | grep "${NAME}" | awk '{print $1}' | xargs kubectl delete pods -n "${NAMESPACE}"
+  render:
+    step:
+      - mkdir -p ${TMP}/helm && rm -rf "${TMP}/helm/${NAME}" && cp -r "${DEP}/ops/helm/myapp" "${TMP}/helm/${NAME}"
+      - sh ${DEP}/ops/tool/render.sh ops/helm/values.yaml.tpl ${TMP}/helm/values.yaml
+      - sh ${DEP}/ops/tool/render.sh ${DEP}/ops/helm/myapp/Chart.yaml ${TMP}/helm/${NAME}/Chart.yaml
+  diff:
+    step:
+      - test "${K8S_CONTEXT}" == "$(kubectl config current-context)" || exit 1
+      - helm diff upgrade "${NAME}" -n "${NAMESPACE}" "${TMP}/helm/${NAME}" -f "${TMP}/helm/values.yaml"
+  install:
+    step:
+      - test "${K8S_CONTEXT}" == "$(kubectl config current-context)" || exit 1
+      - helm install "${NAME}" -n "${NAMESPACE}" "${TMP}/helm/${NAME}" -f "${TMP}/helm/values.yaml"
+  delete:
+    step:
+      - test "${K8S_CONTEXT}" == "$(kubectl config current-context)" || exit 1
+      - helm delete "${NAME}" -n "${NAMESPACE}"
+  upgrade:
+    step:
+      - test "${K8S_CONTEXT}" == "$(kubectl config current-context)" || exit 1
+      - helm upgrade "${NAME}" -n "${NAMESPACE}" "${TMP}/helm/${NAME}" -f "${TMP}/helm/values.yaml"
