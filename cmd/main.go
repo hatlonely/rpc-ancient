@@ -88,7 +88,9 @@ func main() {
 	svc, err := service.NewAncientServiceWithOptions(mysqlCli, esCli, &options.Service)
 	Must(err)
 
-	grpcServer := grpc.NewServer(rpcx.GRPCUnaryInterceptor(grpcLog, rpcx.WithDefaultValidator()))
+	grpcServer := grpc.NewServer(
+		rpcx.GRPCUnaryInterceptor(grpcLog, rpcx.WithGRPCUnaryInterceptorDefaultValidator()),
+	)
 	api.RegisterAncientServiceServer(grpcServer, svc)
 
 	go func() {
