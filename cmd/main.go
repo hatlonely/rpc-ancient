@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/hatlonely/go-kit/bind"
 	"github.com/hatlonely/go-kit/cli"
@@ -18,6 +19,9 @@ import (
 	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/rpcx"
+	"github.com/opentracing/opentracing-go"
+	"github.com/uber/jaeger-client-go"
+	jaegercfg "github.com/uber/jaeger-client-go/config"
 	"google.golang.org/grpc"
 
 	"github.com/hatlonely/rpc-ancient/api/gen/go/api"
@@ -41,6 +45,7 @@ type Options struct {
 	Mysql         cli.MySQLOptions
 	Elasticsearch cli.ElasticSearchOptions
 	Service       service.Options
+	Jaeger        jaegercfg.Configuration
 
 	Logger struct {
 		Info logger.Options
@@ -81,6 +86,11 @@ func main() {
 	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info)
 	Must(err)
 
+	tracer, closer, err := options.Jaeger.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
+	Must(err)
+	defer closer.Close()
+	opentracing.SetGlobalTracer(tracer)
+
 	mysqlCli, err := cli.NewMysqlWithOptions(&options.Mysql)
 	Must(err)
 	esCli, err := cli.NewElasticSearchWithOptions(&options.Elasticsearch)
@@ -89,7 +99,11 @@ func main() {
 	Must(err)
 
 	grpcServer := grpc.NewServer(
-		rpcx.GRPCUnaryInterceptor(grpcLog, rpcx.WithGRPCUnaryInterceptorDefaultValidator()),
+		rpcx.GRPCUnaryInterceptor(
+			grpcLog,
+			rpcx.WithGRPCUnaryInterceptorDefaultValidator(),
+			rpcx.WithGRPCUnaryInterceptorEnableTracing(),
+		),
 	)
 	api.RegisterAncientServiceServer(grpcServer, svc)
 
@@ -106,11 +120,17 @@ func main() {
 		rpcx.MuxWithProtoErrorHandler(),
 	)
 	Must(api.RegisterAncientServiceHandlerFromEndpoint(
-		context.Background(), mux, fmt.Sprintf("0.0.0.0:%v", options.Grpc.Port), []grpc.DialOption{grpc.WithInsecure()},
+		context.Background(), mux, fmt.Sprintf("0.0.0.0:%v", options.Grpc.Port), []grpc.DialOption{
+			grpc.WithInsecure(), grpc.WithUnaryInterceptor(
+				grpc_opentracing.UnaryClientInterceptor(
+					grpc_opentracing.WithTracer(opentracing.GlobalTracer()),
+				),
+			),
+		},
 	))
 	infoLog.Info(options)
 
-	httpServer := http.Server{Addr: fmt.Sprintf(":%v", options.Http.Port), Handler: mux}
+	httpServer := http.Server{Addr: fmt.Sprintf(":%v", options.Http.Port), Handler: rpcx.TracingWrapper(mux)}
 	go func() {
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			infoLog.Warnf("httpServer.ListenAndServe, err: [%v]", err)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/hatlonely/go-kit/rpcx"
 	"github.com/jinzhu/gorm"
+	"github.com/opentracing/opentracing-go"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc/codes"
 
@@ -13,6 +14,10 @@ import (
 )
 
 func (s *AncientService) GetAncient(ctx context.Context, req *api.GetAncientReq) (*api.Ancient, error) {
+	span, ctx := opentracing.StartSpanFromContext(ctx, "GetAncient")
+	//fmt.Println(err)
+	defer span.Finish()
+
 	shici := &storage.ShiCi{}
 	if err := s.mysqlCli.Where("id=?", req.Id).First(shici).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {

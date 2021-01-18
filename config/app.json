@@ -5,6 +5,16 @@
   "grpc": {
     "port": 6080
   },
+  "jaeger": {
+    "serviceName": "rpc-ancient",
+    "sampler": {
+      "type": "const",
+      "param": 1
+    },
+    "reporter": {
+      "logSpans": true
+    }
+  },
   "mysql": {
     "username": "root",
     "password": "",
