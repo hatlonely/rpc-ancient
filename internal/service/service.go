@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/jinzhu/gorm"
+	"github.com/hatlonely/go-kit/wrap"
 	"github.com/olivere/elastic/v7"
 	"github.com/pkg/errors"
 
@@ -12,14 +12,15 @@ import (
 )
 
 type AncientService struct {
-	mysqlCli *gorm.DB
+	mysqlCli *wrap.GORMDBWrapper
 	esCli    *elastic.Client
 	options  *Options
 }
 
-func NewAncientServiceWithOptions(mysqlCli *gorm.DB, esCli *elastic.Client, options *Options) (*AncientService, error) {
-	if !mysqlCli.HasTable(&storage.ShiCi{}) {
-		if err := mysqlCli.Set("gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").CreateTable(&storage.ShiCi{}).Error; err != nil {
+func NewAncientServiceWithOptions(mysqlCli *wrap.GORMDBWrapper, esCli *elastic.Client, options *Options) (*AncientService, error) {
+	if !mysqlCli.HasTable(context.Background(), &storage.ShiCi{}) {
+		if err := mysqlCli.Set(context.Background(), "gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").
+			CreateTable(context.Background(), &storage.ShiCi{}).Unwrap().Error; err != nil {
 			return nil, err
 		}
 	}

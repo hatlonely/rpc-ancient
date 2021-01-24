@@ -19,6 +19,7 @@ import (
 	"github.com/hatlonely/go-kit/logger"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/rpcx"
+	"github.com/hatlonely/go-kit/wrap"
 	"github.com/opentracing/opentracing-go"
 	"github.com/uber/jaeger-client-go"
 	jaegercfg "github.com/uber/jaeger-client-go/config"
@@ -42,7 +43,7 @@ type Options struct {
 
 	ExitTimeout time.Duration `dft:"10s"`
 
-	Mysql         cli.MySQLOptions
+	Mysql         wrap.GORMDBWrapperOptions
 	Elasticsearch cli.ElasticSearchOptions
 	Service       service.Options
 	Jaeger        jaegercfg.Configuration
@@ -91,7 +92,7 @@ func main() {
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 
-	mysqlCli, err := cli.NewMysqlWithOptions(&options.Mysql)
+	mysqlCli, err := wrap.NewGORMDBWrapperWithOptions(&options.Mysql)
 	Must(err)
 	esCli, err := cli.NewElasticSearchWithOptions(&options.Elasticsearch)
 

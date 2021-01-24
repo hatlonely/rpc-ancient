@@ -16,14 +16,24 @@
     }
   },
   "mysql": {
-    "username": "root",
-    "password": "",
-    "database": "ancient",
-    "host": "127.0.0.1",
-    "port": 3306,
-    "connMaxLifeTime": "60s",
-    "maxIdleConns": 10,
-    "maxOpenConns": 20
+    "gorm": {
+      "username": "root",
+      "password": "",
+      "database": "ancient",
+      "host": "127.0.0.1",
+      "port": 3306,
+      "connMaxLifeTime": "60s",
+      "maxIdleConns": 10,
+      "maxOpenConns": 20
+    },
+    "wrapper": {
+      "enableTrace": true
+    },
+    "retry": {
+      "attempts": 3,
+      "lastErrorOnly": true,
+      "delayType": "BackOff"
+    }
   },
   "elasticsearch": {
     "uri": "http://127.0.0.1:9200"

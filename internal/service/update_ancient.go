@@ -23,9 +23,9 @@ func (s *AncientService) UpdateAncient(ctx context.Context, req *api.UpdateAncie
 
 	rpcx.CtxSet(ctx, "shici", shici)
 
-	if err := s.mysqlCli.Update(shici).Error; err != nil {
+	if err := s.mysqlCli.Update(ctx, shici).Unwrap().Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
-			if err := s.mysqlCli.Create(shici).Error; err != nil {
+			if err := s.mysqlCli.Create(ctx, shici).Unwrap().Error; err != nil {
 				return nil, errors.Wrap(err, "mysql update failed")
 			}
 		} else {

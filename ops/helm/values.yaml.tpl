@@ -23,14 +23,24 @@ config:
         "port": 6080
       },
       "mysql": {
-        "username": "${MYSQL_USERNAME}",
-        "password": "${MYSQL_PASSWORD}",
-        "database": "${MYSQL_DATABASE}",
-        "host": "${MYSQL_SERVER}",
-        "port": 3306,
-        "connMaxLifeTime": "60s",
-        "maxIdleConns": 10,
-        "maxOpenConns": 20
+        "gorm": {
+          "username": "${MYSQL_USERNAME}",
+          "password": "${MYSQL_PASSWORD}",
+          "database": "${MYSQL_DATABASE}",
+          "host": "${MYSQL_SERVER}",
+          "port": 3306,
+          "connMaxLifeTime": "60s",
+          "maxIdleConns": 10,
+          "maxOpenConns": 20
+        },
+        "wrapper": {
+          "enableTrace": true
+        },
+        "retry": {
+          "attempts": 3,
+          "lastErrorOnly": true,
+          "delayType": "BackOff"
+        }
       },
       "elasticsearch": {
         "uri": "http://${ELASTICSEARCH_SERVER}"

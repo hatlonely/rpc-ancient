@@ -8,7 +8,7 @@ require (
 	github.com/golang/protobuf v1.4.3
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.2
 	github.com/grpc-ecosystem/grpc-gateway v1.15.2
-	github.com/hatlonely/go-kit v1.0.17-0.20210118164337-0df31e9d2aa0
+	github.com/hatlonely/go-kit v1.0.17-0.20210124071933-5988eb6d384e
 	github.com/jinzhu/gorm v1.9.15
 	github.com/olivere/elastic/v7 v7.0.19
 	github.com/opentracing/opentracing-go v1.2.0

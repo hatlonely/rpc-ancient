@@ -22,7 +22,7 @@ func (s *AncientService) PutAncient(ctx context.Context, req *api.PutAncientReq)
 
 	rpcx.CtxSet(ctx, "shici", shici)
 
-	if err := s.mysqlCli.Create(shici).Error; err != nil {
+	if err := s.mysqlCli.Create(ctx, shici).Unwrap().Error; err != nil {
 		return nil, errors.Wrap(err, "mysql create failed")
 	}
 
