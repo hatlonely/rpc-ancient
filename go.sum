@@ -155,8 +155,8 @@ github.com/grpc-ecosystem/go-grpc-middleware v1.2.2 h1:FlFbCRLd5Jr4iYXZufAvgWN6A
 github.com/grpc-ecosystem/go-grpc-middleware v1.2.2/go.mod h1:EaizFBKfUKtMIF5iaDEhniwNedqGo9FuLFzppDr3uwI=
 github.com/grpc-ecosystem/grpc-gateway v1.15.2 h1:HC+hWRWf+v5zTMPyoaYTKIJih+4sd4XRWmj0qlG87Co=
 github.com/grpc-ecosystem/grpc-gateway v1.15.2/go.mod h1:vO11I9oWA+KsxmfFQPhLnnIb1VDE24M+pdxZFiuZcA8=
-github.com/hatlonely/go-kit v1.0.17-0.20210124075850-d0fafcb8079b h1:abJjztKzmoBq+jBvDtma+7+eUoh0/GKzFXD2Lc5zQc4=
-github.com/hatlonely/go-kit v1.0.17-0.20210124075850-d0fafcb8079b/go.mod h1:bX9MvTd9cIYsShVfIkWwDwJPrjvCJY8EsM+GzjCjloA=
+github.com/hatlonely/go-kit v1.0.17-0.20210124091132-e8a6414b5a16 h1:nXzZqR5pwVCx+3r18DKY1Lf2rNSKPl9VOG0HOPLu7iw=
+github.com/hatlonely/go-kit v1.0.17-0.20210124091132-e8a6414b5a16/go.mod h1:bX9MvTd9cIYsShVfIkWwDwJPrjvCJY8EsM+GzjCjloA=
 github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/inconshreveable/mousetrap v1.0.0/go.mod h1:PxqpIevigyE2G7u3NXJIT2ANytuPF1OarO4DADm73n8=

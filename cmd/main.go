@@ -78,6 +78,9 @@ func main() {
 	}
 	cfg, err := config.NewConfigWithSimpleFile(options.ConfigPath)
 	Must(err)
+	Must(cfg.Watch())
+	defer cfg.Stop()
+
 	Must(bind.Bind(&options, []bind.Getter{
 		flag.Instance(), bind.NewEnvGetter(bind.WithEnvPrefix("ANCIENT")), cfg,
 	}, refx.WithCamelName()))
@@ -92,7 +95,7 @@ func main() {
 	defer closer.Close()
 	opentracing.SetGlobalTracer(tracer)
 
-	mysqlCli, err := wrap.NewGORMDBWrapperWithOptions(&options.Mysql)
+	mysqlCli, err := wrap.NewGORMDBWrapperWithConfig(cfg.Sub("mysql"), refx.WithCamelName())
 	Must(err)
 	esCli, err := cli.NewElasticSearchWithOptions(&options.Elasticsearch)
 
