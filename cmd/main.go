@@ -134,7 +134,10 @@ func main() {
 	))
 	infoLog.Info(options)
 
-	httpServer := http.Server{Addr: fmt.Sprintf(":%v", options.Http.Port), Handler: rpcx.TracingWrapper(mux)}
+	httpServer := http.Server{
+		Addr:    fmt.Sprintf(":%v", options.Http.Port),
+		Handler: rpcx.MetricWrapper(rpcx.TraceWrapper(mux)),
+	}
 	go func() {
 		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			infoLog.Warnf("httpServer.ListenAndServe, err: [%v]", err)

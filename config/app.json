@@ -27,7 +27,14 @@
       "maxOpenConns": 20
     },
     "wrapper": {
-      "enableTrace": true
+      "enableTrace": true,
+      "enableMetric": true,
+      "metric": {
+        "buckets": [20, 40, 100],
+        "constLabels": {
+          "name": "rpc-ancient"
+        }
+      }
     },
     "retry": {
       "attempts": 3,
@@ -62,7 +69,7 @@
           "timeout": "200ms",
           "msgChanLen": 200,
           "workerNum": 2,
-          "elasticSearch": {
+          "es": {
             "uri": "http://127.0.0.1:9200"
           }
         }

@@ -69,7 +69,7 @@ config:
               "timeout": "200ms",
               "msgChanLen": 200,
               "workerNum": 2,
-              "elasticSearch": {
+              "es": {
                 "uri": "http://${ELASTICSEARCH_SERVER}"
               }
             }
