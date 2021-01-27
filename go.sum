@@ -243,8 +243,8 @@ github.com/hashicorp/logutils v1.0.0/go.mod h1:QIAnNjmIWmVIIkWDTG1z5v++HQmx9WQRO
 github.com/hashicorp/mdns v1.0.0/go.mod h1:tL+uN++7HEJ6SQLQ2/p+z2pH24WQKWjBPkE0mNTz8vQ=
 github.com/hashicorp/memberlist v0.1.3/go.mod h1:ajVTdAv/9Im8oMAAj5G31PhhMCZJV2pPBoIllUwCN7I=
 github.com/hashicorp/serf v0.8.2/go.mod h1:6hOLApaqBFA1NXqRQAsxw9QxuDEvNxSQRwA/JwenrHc=
-github.com/hatlonely/go-kit v1.0.17-0.20210125171100-113436a3269a h1:muqPpTNxKVMBfKZB7kGLXnE+guKBKnJGl3hNOaeJB3c=
-github.com/hatlonely/go-kit v1.0.17-0.20210125171100-113436a3269a/go.mod h1:bLsXYb9MplPf4WiqlEqpcpIJq/Bf0PAV9G/yrtOA2Og=
+github.com/hatlonely/go-kit v1.0.17-0.20210127042412-bf27e901cba1 h1:daRRFM7h3dqHnGnmbXTrFttVjisLKiBm7UA9N9FHogM=
+github.com/hatlonely/go-kit v1.0.17-0.20210127042412-bf27e901cba1/go.mod h1:bLsXYb9MplPf4WiqlEqpcpIJq/Bf0PAV9G/yrtOA2Og=
 github.com/hpcloud/tail v1.0.0 h1:nfCOvKYfkgYP8hkirhJocXT2+zOD8yUNjXaWfTlyFKI=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
 github.com/hudl/fargo v1.3.0/go.mod h1:y3CKSmjA+wD2gak7sUSXTAoopbhU08POFhmITJgmKTg=

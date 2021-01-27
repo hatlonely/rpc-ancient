@@ -40,6 +40,15 @@
       "attempts": 3,
       "lastErrorOnly": true,
       "delayType": "BackOff"
+    },
+    "rateLimiterGroup": {
+      "type": "LocalGroup",
+      "localGroupRateLimiter": {
+        "DB.First": {
+          "interval": "5s",
+          "buckets":  2
+        }
+      }
     }
   },
   "elasticsearch": {
