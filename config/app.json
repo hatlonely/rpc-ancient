@@ -43,10 +43,10 @@
     },
     "rateLimiterGroup": {
       "type": "LocalGroup",
-      "localGroupRateLimiter": {
+      "options": {
         "DB.First": {
           "interval": "5s",
-          "buckets":  2
+          "burst":  2
         }
       }
     }
@@ -63,7 +63,7 @@
       "flatMap": true,
       "writers": [{
         "type": "RotateFile",
-        "rotateFileWriter": {
+        "options": {
           "filename": "log/ancient.rpc",
           "maxAge": "24h",
           "formatter": {
@@ -72,7 +72,7 @@
         }
       }, {
         "type": "ElasticSearch",
-        "elasticSearchWriter": {
+        "options": {
           "index": "grpc",
           "idField": "requestID",
           "timeout": "200ms",
@@ -88,7 +88,7 @@
       "level": "Info",
       "writers": [{
         "type": "RotateFile",
-        "rotateFileWriter": {
+        "options": {
           "filename": "log/ancient.rpc",
           "maxAge": "24h",
           "formatter": {

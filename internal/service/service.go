@@ -18,7 +18,7 @@ type AncientService struct {
 }
 
 func NewAncientServiceWithOptions(mysqlCli *wrap.GORMDBWrapper, esCli *elastic.Client, options *Options) (*AncientService, error) {
-	if !mysqlCli.HasTable(context.Background(), &storage.ShiCi{}) {
+	if !mysqlCli.HasTable(&storage.ShiCi{}) {
 		if err := mysqlCli.Set(context.Background(), "gorm:table_options", "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4").
 			CreateTable(context.Background(), &storage.ShiCi{}).Unwrap().Error; err != nil {
 			return nil, err

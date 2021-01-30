@@ -85,9 +85,9 @@ func main() {
 		flag.Instance(), bind.NewEnvGetter(bind.WithEnvPrefix("ANCIENT")), cfg,
 	}, refx.WithCamelName()))
 
-	grpcLog, err := logger.NewLoggerWithOptions(&options.Logger.Grpc)
+	grpcLog, err := logger.NewLoggerWithOptions(&options.Logger.Grpc, refx.WithCamelName())
 	Must(err)
-	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info)
+	infoLog, err := logger.NewLoggerWithOptions(&options.Logger.Info, refx.WithCamelName())
 	Must(err)
 
 	tracer, closer, err := options.Jaeger.NewTracer(jaegercfg.Logger(jaeger.StdLogger))
