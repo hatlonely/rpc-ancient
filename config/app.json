@@ -15,6 +15,17 @@
       "logSpans": true
     }
   },
+  "rateLimiter": {
+    "redis": {
+      "wrapper": {
+        "enableTrace": false,
+        "enableMetric": true,
+      }
+    },
+    "qps": {
+      "DB.First": 1
+    }
+  },
   "mysql": {
     "gorm": {
       "username": "root",
@@ -42,7 +53,7 @@
       "delayType": "BackOff"
     },
     "rateLimiterGroup": {
-      "type": "LocalGroup",
+      "type": "Redis",
       "options": {
         "DB.First": {
           "interval": "5s",

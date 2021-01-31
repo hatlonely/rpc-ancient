@@ -17,6 +17,7 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/logger"
+	"github.com/hatlonely/go-kit/ratelimiter"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/rpcx"
 	"github.com/hatlonely/go-kit/wrap"
@@ -47,6 +48,7 @@ type Options struct {
 	Elasticsearch cli.ElasticSearchOptions
 	Service       service.Options
 	Jaeger        jaegercfg.Configuration
+	RateLimiter   ratelimiter.RedisRateLimiterOptions
 
 	Logger struct {
 		Info logger.Options
@@ -84,6 +86,10 @@ func main() {
 	Must(bind.Bind(&options, []bind.Getter{
 		flag.Instance(), bind.NewEnvGetter(bind.WithEnvPrefix("ANCIENT")), cfg,
 	}, refx.WithCamelName()))
+
+	ratelimiter, err := ratelimiter.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
+	Must(err)
+	wrap.RegisterRateLimiterGroup("Redis", ratelimiter)
 
 	grpcLog, err := logger.NewLoggerWithOptions(&options.Logger.Grpc, refx.WithCamelName())
 	Must(err)
