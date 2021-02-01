@@ -44,11 +44,12 @@ type Options struct {
 
 	ExitTimeout time.Duration `dft:"10s"`
 
-	Mysql         wrap.GORMDBWrapperOptions
-	Elasticsearch cli.ElasticSearchOptions
-	Service       service.Options
-	Jaeger        jaegercfg.Configuration
-	RateLimiter   ratelimiter.RedisRateLimiterOptions
+	GRPCInterceptor rpcx.GRPCInterceptorOptions
+	Mysql           wrap.GORMDBWrapperOptions
+	Elasticsearch   cli.ElasticSearchOptions
+	Service         service.Options
+	Jaeger          jaegercfg.Configuration
+	RateLimiter     ratelimiter.RedisRateLimiterOptions
 
 	Logger struct {
 		Info logger.Options
@@ -108,13 +109,11 @@ func main() {
 	svc, err := service.NewAncientServiceWithOptions(mysqlCli, esCli, &options.Service)
 	Must(err)
 
-	grpcServer := grpc.NewServer(
-		rpcx.GRPCUnaryInterceptor(
-			grpcLog,
-			rpcx.WithGRPCUnaryInterceptorDefaultValidator(),
-			rpcx.WithGRPCUnaryInterceptorEnableTracing(),
-		),
-	)
+	interceptor, err := rpcx.NewGRPCInterceptorWithOptions(&options.GRPCInterceptor)
+	Must(err)
+	interceptor.SetLogger(grpcLog)
+	grpcServer := grpc.NewServer(interceptor.ServerOption())
+
 	api.RegisterAncientServiceServer(grpcServer, svc)
 
 	go func() {

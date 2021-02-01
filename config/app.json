@@ -5,6 +5,10 @@
   "grpc": {
     "port": 6080
   },
+  "grpcInterceptor": {
+    "enableTrace": true,
+    "validators": ["Default"]
+  },
   "jaeger": {
     "serviceName": "rpc-ancient",
     "sampler": {

@@ -22,6 +22,10 @@ config:
       "grpc": {
         "port": 6080
       },
+      "grpcInterceptor": {
+        "enableTrace": true,
+        "validators": ["Default"]
+      }
       "mysql": {
         "gorm": {
           "username": "${MYSQL_USERNAME}",
