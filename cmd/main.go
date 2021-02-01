@@ -10,7 +10,6 @@ import (
 	"syscall"
 	"time"
 
-	grpc_opentracing "github.com/grpc-ecosystem/go-grpc-middleware/tracing/opentracing"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/hatlonely/go-kit/bind"
 	"github.com/hatlonely/go-kit/cli"
@@ -45,6 +44,7 @@ type Options struct {
 	ExitTimeout time.Duration `dft:"10s"`
 
 	GRPCInterceptor rpcx.GRPCInterceptorOptions
+	MuxInterceptor  rpcx.MuxInterceptorOptions
 	Mysql           wrap.GORMDBWrapperOptions
 	Elasticsearch   cli.ElasticSearchOptions
 	Service         service.Options
@@ -109,10 +109,10 @@ func main() {
 	svc, err := service.NewAncientServiceWithOptions(mysqlCli, esCli, &options.Service)
 	Must(err)
 
-	interceptor, err := rpcx.NewGRPCInterceptorWithOptions(&options.GRPCInterceptor)
+	grpcInterceptor, err := rpcx.NewGRPCInterceptorWithOptions(&options.GRPCInterceptor)
 	Must(err)
-	interceptor.SetLogger(grpcLog)
-	grpcServer := grpc.NewServer(interceptor.ServerOption())
+	grpcInterceptor.SetLogger(grpcLog)
+	grpcServer := grpc.NewServer(grpcInterceptor.ServerOption())
 
 	api.RegisterAncientServiceServer(grpcServer, svc)
 
@@ -122,20 +122,11 @@ func main() {
 		Must(grpcServer.Serve(address))
 	}()
 
-	mux := runtime.NewServeMux(
-		rpcx.MuxWithMetadata(),
-		rpcx.MuxWithIncomingHeaderMatcher(),
-		rpcx.MuxWithOutgoingHeaderMatcher(),
-		rpcx.MuxWithProtoErrorHandler(),
-	)
+	muxInterceptor, err := rpcx.NewMuxInterceptorWithOptions(&options.MuxInterceptor)
+	Must(err)
+	mux := runtime.NewServeMux(muxInterceptor.ServeMuxOptions()...)
 	Must(api.RegisterAncientServiceHandlerFromEndpoint(
-		context.Background(), mux, fmt.Sprintf("0.0.0.0:%v", options.Grpc.Port), []grpc.DialOption{
-			grpc.WithInsecure(), grpc.WithUnaryInterceptor(
-				grpc_opentracing.UnaryClientInterceptor(
-					grpc_opentracing.WithTracer(opentracing.GlobalTracer()),
-				),
-			),
-		},
+		context.Background(), mux, fmt.Sprintf("0.0.0.0:%v", options.Grpc.Port), grpcInterceptor.DialOptions(),
 	))
 	infoLog.Info(options)
 
