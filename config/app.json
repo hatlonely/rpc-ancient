@@ -1,23 +1,20 @@
 {
-  "http": {
-    "port": 80
-  },
-  "grpc": {
-    "port": 6080
-  },
-  "grpcInterceptor": {
+  "grpcGateway": {
+    "httpPort": 80,
+    "grpcPort": 6080,
     "enableTrace": true,
+    "enableMetric": true,
     "validators": ["Default"],
     "pascalNameKey": true,
-  },
-  "jaeger": {
-    "serviceName": "rpc-ancient",
-    "sampler": {
-      "type": "const",
-      "param": 1
-    },
-    "reporter": {
-      "logSpans": true
+    "jaeger": {
+      "serviceName": "rpc-ancient",
+      "sampler": {
+        "type": "const",
+        "param": 1
+      },
+      "reporter": {
+        "logSpans": false
+      }
     }
   },
   "rateLimiter": {
