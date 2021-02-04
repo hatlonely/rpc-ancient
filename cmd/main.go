@@ -11,7 +11,7 @@ import (
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/logger"
-	"github.com/hatlonely/go-kit/ratelimiter"
+	"github.com/hatlonely/go-kit/micro"
 	"github.com/hatlonely/go-kit/refx"
 	"github.com/hatlonely/go-kit/rpcx"
 	"github.com/hatlonely/go-kit/wrap"
@@ -29,7 +29,7 @@ type Options struct {
 	Mysql         wrap.GORMDBWrapperOptions
 	Elasticsearch cli.ElasticSearchOptions
 	Service       service.Options
-	RateLimiter   ratelimiter.RedisRateLimiterOptions
+	RateLimiter   micro.RedisRateLimiterOptions
 
 	Logger struct {
 		Info logger.Options
@@ -68,8 +68,9 @@ func main() {
 	refx.Must(err)
 	infoLog.With("options", options).Info("init config success")
 
-	ratelimiter, err := ratelimiter.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
+	ratelimiter, err := micro.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
 	refx.Must(err)
+	micro.RegisterRateLimiter("Redis", ratelimiter)
 	wrap.RegisterRateLimiterGroup("Redis", ratelimiter)
 
 	mysqlCli, err := wrap.NewGORMDBWrapperWithConfig(cfg.Sub("mysql"), refx.WithCamelName())

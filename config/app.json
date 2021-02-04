@@ -4,6 +4,7 @@
     "grpcPort": 6080,
     "enableTrace": true,
     "enableMetric": true,
+    "enablePprof": true,
     "validators": ["Default"],
     "pascalNameKey": true,
     "jaeger": {
@@ -15,6 +16,17 @@
       "reporter": {
         "logSpans": false
       }
+    },
+    "rateLimiterHeader": "x-user-id",
+    "rateLimiter": {
+      "type": "Redis"
+    },
+    "parallelControllerHeader": "x-user-id",
+    "parallelController": {
+      "type": "LocalGroup",
+      "options": {
+        "123|/api.AncientService/GetAncient": 3,
+      }
     }
   },
   "rateLimiter": {
@@ -25,7 +37,7 @@
       }
     },
     "qps": {
-      "DB.First": 1
+      "DB.First1": 1,
     }
   },
   "mysql": {
