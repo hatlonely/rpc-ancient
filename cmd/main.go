@@ -72,7 +72,7 @@ func main() {
 
 	ratelimiter, err := microx.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
 	refx.Must(err)
-	micro.RegisterRateLimiter("RedisInstance", ratelimiter)
+	micro.RegisterRateLimiter("RedisRateLimiterInstance", ratelimiter)
 	parallelController, err := micro.NewLocalParallelControllerGroupWithOptions(&options.ParallelController)
 	refx.Must(err)
 	micro.RegisterParallelController("LocalParallelControllerInstance", parallelController)

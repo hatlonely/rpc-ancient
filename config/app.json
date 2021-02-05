@@ -19,7 +19,7 @@
     },
     "rateLimiterHeader": "x-user-id",
     "rateLimiter": {
-      "type": "RedisInstance"
+      "type": "RedisRateLimiterInstance"
     },
     "parallelControllerHeader": "x-user-id",
     "parallelController": {
@@ -37,7 +37,7 @@
       }
     },
     "qps": {
-      "mysql.DB.First": 1
+      "123|/api.AncientService/GetAncient": 4
     }
   },
   "mysql": {
@@ -68,11 +68,11 @@
       "delayType": "BackOff"
     },
     "rateLimiter": {
-      "type": "RedisInstance",
+      "type": "LocalGroup",
       "options": {
-        "DB.First": {
-          "interval": "5s",
-          "burst":  2
+        "mysql.DB.First": {
+          "interval": "2s",
+          "burst":  1
         }
       }
     }
