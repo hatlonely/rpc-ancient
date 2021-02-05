@@ -19,7 +19,7 @@
     },
     "rateLimiterHeader": "x-user-id",
     "rateLimiter": {
-      "type": "Redis"
+      "type": "RedisInstance"
     },
     "parallelControllerHeader": "x-user-id",
     "parallelController": {
@@ -32,12 +32,12 @@
   "rateLimiter": {
     "redis": {
       "wrapper": {
-        "enableTrace": false,
+        "enableTrace": true,
         "enableMetric": true,
       }
     },
     "qps": {
-      "DB.First1": 1,
+      "mysql.DB.First": 1
     }
   },
   "mysql": {
@@ -52,6 +52,7 @@
       "maxOpenConns": 20
     },
     "wrapper": {
+      "name": "mysql",
       "enableTrace": true,
       "enableMetric": true,
       "metric": {
@@ -66,8 +67,8 @@
       "lastErrorOnly": true,
       "delayType": "BackOff"
     },
-    "rateLimiterGroup": {
-      "type": "Redis",
+    "rateLimiter": {
+      "type": "RedisInstance",
       "options": {
         "DB.First": {
           "interval": "5s",
