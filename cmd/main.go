@@ -26,11 +26,12 @@ var Version string
 type Options struct {
 	flag.Options
 
-	GrpcGateway   rpcx.GrpcGatewayOptions
-	Mysql         wrap.GORMDBWrapperOptions
-	Elasticsearch cli.ElasticSearchOptions
-	Service       service.Options
-	RateLimiter   microx.RedisRateLimiterOptions
+	GrpcGateway        rpcx.GrpcGatewayOptions
+	Mysql              wrap.GORMDBWrapperOptions
+	Elasticsearch      cli.ElasticSearchOptions
+	Service            service.Options
+	RateLimiter        microx.RedisRateLimiterOptions
+	ParallelController micro.LocalParallelControllerOptions
 
 	Logger struct {
 		Info logger.Options
@@ -72,6 +73,9 @@ func main() {
 	ratelimiter, err := microx.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
 	refx.Must(err)
 	micro.RegisterRateLimiter("RedisInstance", ratelimiter)
+	parallelController, err := micro.NewLocalParallelControllerGroupWithOptions(&options.ParallelController)
+	refx.Must(err)
+	micro.RegisterParallelController("LocalParallelControllerInstance", parallelController)
 
 	mysqlCli, err := wrap.NewGORMDBWrapperWithConfig(cfg.Sub("mysql"), refx.WithCamelName())
 	refx.Must(err)
