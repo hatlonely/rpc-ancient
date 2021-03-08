@@ -6,7 +6,7 @@
     "enableMetric": true,
     "enablePprof": true,
     "validators": ["Default"],
-    "pascalNameKey": true,
+    "pascalNameKey": false,
     "jaeger": {
       "serviceName": "rpc-ancient",
       "sampler": {
@@ -32,6 +32,7 @@
         "addr": "127.0.0.1:6379"
       },
       "wrapper": {
+        "name": "parallelController",
         "enableTrace": true,
         "enableMetric": true
       }
@@ -49,6 +50,7 @@
         "addr": "127.0.0.1:6379"
       },
       "wrapper": {
+        "name": "rateLimiter",
         "enableTrace": true,
         "enableMetric": true
       }
@@ -136,6 +138,7 @@
       }, {
         "type": "ElasticSearch",
         "options": {
+          "level": "Info",
           "index": "grpc",
           "idField": "requestID",
           "timeout": "200ms",
