@@ -16,7 +16,7 @@ func (s *AncientService) GetAncient(ctx context.Context, req *api.GetAncientReq)
 	shici := &storage.ShiCi{}
 	if err := s.mysqlCli.Where(ctx, "id=?", req.Id).First(ctx, shici).Unwrap().Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, rpcx.NewErrorf(codes.NotFound, "NotFound", "shici [%v] not exist", req.Id)
+			return nil, rpcx.NewErrorf(errors.Errorf("shici [%v] not exist", req.Id), codes.NotFound, "NotFound", "shici [%v] not exist", req.Id)
 		}
 		return nil, errors.Wrapf(err, "mysql select shici [%v] failed", req.Id)
 	}

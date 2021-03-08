@@ -16,16 +16,64 @@ ingress:
 config:
   app: |
     {
-      "http": {
-        "port": 80
-      },
-      "grpc": {
-        "port": 6080
-      },
-      "grpcInterceptor": {
+      "grpcGateway": {
+        "httpPort": 80,
+        "grpcPort": 6080,
         "enableTrace": true,
-        "validators": ["Default"]
-      }
+        "enableMetric": true,
+        "enablePprof": true,
+        "validators": ["Default"],
+        "pascalNameKey": true,
+        "jaeger": {
+          "serviceName": "rpc-ancient",
+          "sampler": {
+            "type": "const",
+            "param": 1
+          },
+          "reporter": {
+            "logSpans": false
+          }
+        },
+        "rateLimiterHeader": "x-user-id",
+        "rateLimiter": {
+          "type": "RedisRateLimiterInstance"
+        },
+        "parallelControllerHeader": "x-user-id",
+        "parallelController": {
+          "type": "RedisTimedParallelControllerInstance"
+        }
+      },
+      "parallelController": {
+        "redis": {
+          "redis": {
+            "addr": "${REDIS_ADDRESS}"
+          },
+          "wrapper": {
+            "enableTrace": true,
+            "enableMetric": true
+          }
+        },
+        "defaultMaxToken": 3,
+        "maxToken": {
+          "123|/api.AncientService/GetAncient": 3
+        },
+        "interval": "3s",
+        "expiration": "10s"
+      },
+      "rateLimiter": {
+        "redis": {
+          "redis": {
+            "addr": "${REDIS_ADDRESS}"
+          },
+          "wrapper": {
+            "enableTrace": true,
+            "enableMetric": true
+          }
+        },
+        "qps": {
+          "123|/api.AncientService/GetAncient": 4
+        }
+      },
       "mysql": {
         "gorm": {
           "username": "${MYSQL_USERNAME}",

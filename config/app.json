@@ -23,17 +23,34 @@
     },
     "parallelControllerHeader": "x-user-id",
     "parallelController": {
-      "type": "LocalParallelControllerInstance",
+      "type": "RedisTimedParallelControllerInstance"
     }
   },
   "parallelController": {
-    "123|/api.AncientService/GetAncient": 3,
+    "redis": {
+      "redis": {
+        "addr": "127.0.0.1:6379"
+      },
+      "wrapper": {
+        "enableTrace": true,
+        "enableMetric": true
+      }
+    },
+    "defaultMaxToken": 3,
+    "maxToken": {
+      "123|/api.AncientService/GetAncient": 3
+    },
+    "interval": "3s",
+    "expiration": "10s"
   },
   "rateLimiter": {
     "redis": {
+      "redis": {
+        "addr": "127.0.0.1:6379"
+      },
       "wrapper": {
         "enableTrace": true,
-        "enableMetric": true,
+        "enableMetric": true
       }
     },
     "qps": {
@@ -77,8 +94,26 @@
       }
     }
   },
-  "elasticsearch": {
-    "uri": "http://127.0.0.1:9200"
+  "esClient": {
+    "es": {
+      "uri": "http://127.0.0.1:9200"
+    },
+    "wrapper": {
+      "name": "mysql",
+      "enableTrace": true,
+      "enableMetric": true,
+      "metric": {
+        "buckets": [20, 40, 100],
+        "constLabels": {
+          "name": "rpc-ancient"
+        }
+      }
+    },
+    "retry": {
+      "attempts": 3,
+      "lastErrorOnly": true,
+      "delayType": "BackOff"
+    }
   },
   "service": {
     "elasticsearchIndex": "shici"
@@ -86,14 +121,16 @@
   "logger": {
     "grpc": {
       "level": "Info",
-      "flatMap": true,
       "writers": [{
         "type": "RotateFile",
         "options": {
           "filename": "log/ancient.rpc",
           "maxAge": "24h",
           "formatter": {
-            "type": "Json"
+            "type": "Json",
+            "Options": {
+              "FlatMap": true
+            }
           }
         }
       }, {
@@ -105,7 +142,9 @@
           "msgChanLen": 200,
           "workerNum": 2,
           "es": {
-            "uri": "http://127.0.0.1:9200"
+            "es": {
+              "uri": "http://127.0.0.1:9200"
+            }
           }
         }
       }]

@@ -7,10 +7,10 @@ import (
 	"syscall"
 
 	"github.com/hatlonely/go-kit/bind"
-	"github.com/hatlonely/go-kit/cli"
 	"github.com/hatlonely/go-kit/config"
 	"github.com/hatlonely/go-kit/flag"
 	"github.com/hatlonely/go-kit/logger"
+	_ "github.com/hatlonely/go-kit/logger/x"
 	"github.com/hatlonely/go-kit/micro"
 	microx "github.com/hatlonely/go-kit/micro/x"
 	"github.com/hatlonely/go-kit/refx"
@@ -26,12 +26,12 @@ var Version string
 type Options struct {
 	flag.Options
 
+	Service            service.Options
 	GrpcGateway        rpcx.GrpcGatewayOptions
 	Mysql              wrap.GORMDBWrapperOptions
-	Elasticsearch      cli.ElasticSearchOptions
-	Service            service.Options
+	ESClient           wrap.ESClientWrapperOptions
 	RateLimiter        microx.RedisRateLimiterOptions
-	ParallelController micro.LocalParallelControllerOptions
+	ParallelController microx.RedisTimedParallelControllerOptions
 
 	Logger struct {
 		Info logger.Options
@@ -73,13 +73,13 @@ func main() {
 	ratelimiter, err := microx.NewRedisRateLimiterWithConfig(cfg.Sub("rateLimiter"), refx.WithCamelName())
 	refx.Must(err)
 	micro.RegisterRateLimiter("RedisRateLimiterInstance", ratelimiter)
-	parallelController, err := micro.NewLocalParallelControllerGroupWithOptions(&options.ParallelController)
+	parallelController, err := microx.NewRedisTimedParallelControllerWithOptions(&options.ParallelController)
 	refx.Must(err)
-	micro.RegisterParallelController("LocalParallelControllerInstance", parallelController)
+	micro.RegisterParallelController("RedisTimedParallelControllerInstance", parallelController)
 
 	mysqlCli, err := wrap.NewGORMDBWrapperWithConfig(cfg.Sub("mysql"), refx.WithCamelName())
 	refx.Must(err)
-	esCli, err := cli.NewElasticSearchWithOptions(&options.Elasticsearch)
+	esCli, err := wrap.NewESClientWrapperWithOptions(&options.ESClient)
 
 	svc, err := service.NewAncientServiceWithOptions(mysqlCli, esCli, &options.Service)
 	refx.Must(err)
