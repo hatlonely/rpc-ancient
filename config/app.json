@@ -130,8 +130,8 @@
           "maxAge": "24h",
           "formatter": {
             "type": "Json",
-            "Options": {
-              "FlatMap": true
+            "options": {
+              "flatMap": true
             }
           }
         }

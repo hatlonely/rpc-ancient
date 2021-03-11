@@ -29,9 +29,9 @@ vendor: go.mod go.sum
 .PHONY: codegen
 codegen: api/ancient.proto submodule
 	mkdir -p api/gen/go && mkdir -p api/gen/swagger
-	protoc -Irpc-api -I. --gofast_out=plugins=grpc,paths=source_relative:api/gen/go/ $<
-	protoc -Irpc-api -I. --grpc-gateway_out=logtostderr=true,paths=source_relative:api/gen/go $<
-	protoc -Irpc-api -I. --swagger_out=logtostderr=true:api/gen/swagger $<
+	protoc -Irpc-api -I. --gofast_out api/gen/go --gofast_opt plugins=grpc,paths=source_relative $<
+	protoc -Irpc-api -I. --grpc-gateway_out api/gen/go --grpc-gateway_opt logtostderr=true,paths=source_relative $<
+	protoc -Irpc-api -I. --swagger_out api/gen/swagger --swagger_opt logtostderr=true $<
 
 .PHONY: submodule
 submodule:

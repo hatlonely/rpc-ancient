@@ -8,11 +8,11 @@ import (
 	fmt "fmt"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/golang/protobuf/proto"
-	empty "github.com/golang/protobuf/ptypes/empty"
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -422,8 +422,8 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AncientServiceClient interface {
 	GetAncient(ctx context.Context, in *GetAncientReq, opts ...grpc.CallOption) (*Ancient, error)
-	PutAncient(ctx context.Context, in *PutAncientReq, opts ...grpc.CallOption) (*empty.Empty, error)
-	UpdateAncient(ctx context.Context, in *UpdateAncientReq, opts ...grpc.CallOption) (*empty.Empty, error)
+	PutAncient(ctx context.Context, in *PutAncientReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateAncient(ctx context.Context, in *UpdateAncientReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	SearchAncient(ctx context.Context, in *SearchAncientReq, opts ...grpc.CallOption) (*SearchAncientRes, error)
 }
 
@@ -444,8 +444,8 @@ func (c *ancientServiceClient) GetAncient(ctx context.Context, in *GetAncientReq
 	return out, nil
 }
 
-func (c *ancientServiceClient) PutAncient(ctx context.Context, in *PutAncientReq, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *ancientServiceClient) PutAncient(ctx context.Context, in *PutAncientReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/api.AncientService/PutAncient", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -453,8 +453,8 @@ func (c *ancientServiceClient) PutAncient(ctx context.Context, in *PutAncientReq
 	return out, nil
 }
 
-func (c *ancientServiceClient) UpdateAncient(ctx context.Context, in *UpdateAncientReq, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *ancientServiceClient) UpdateAncient(ctx context.Context, in *UpdateAncientReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/api.AncientService/UpdateAncient", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -474,8 +474,8 @@ func (c *ancientServiceClient) SearchAncient(ctx context.Context, in *SearchAnci
 // AncientServiceServer is the server API for AncientService service.
 type AncientServiceServer interface {
 	GetAncient(context.Context, *GetAncientReq) (*Ancient, error)
-	PutAncient(context.Context, *PutAncientReq) (*empty.Empty, error)
-	UpdateAncient(context.Context, *UpdateAncientReq) (*empty.Empty, error)
+	PutAncient(context.Context, *PutAncientReq) (*emptypb.Empty, error)
+	UpdateAncient(context.Context, *UpdateAncientReq) (*emptypb.Empty, error)
 	SearchAncient(context.Context, *SearchAncientReq) (*SearchAncientRes, error)
 }
 
@@ -486,10 +486,10 @@ type UnimplementedAncientServiceServer struct {
 func (*UnimplementedAncientServiceServer) GetAncient(ctx context.Context, req *GetAncientReq) (*Ancient, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAncient not implemented")
 }
-func (*UnimplementedAncientServiceServer) PutAncient(ctx context.Context, req *PutAncientReq) (*empty.Empty, error) {
+func (*UnimplementedAncientServiceServer) PutAncient(ctx context.Context, req *PutAncientReq) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutAncient not implemented")
 }
-func (*UnimplementedAncientServiceServer) UpdateAncient(ctx context.Context, req *UpdateAncientReq) (*empty.Empty, error) {
+func (*UnimplementedAncientServiceServer) UpdateAncient(ctx context.Context, req *UpdateAncientReq) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAncient not implemented")
 }
 func (*UnimplementedAncientServiceServer) SearchAncient(ctx context.Context, req *SearchAncientReq) (*SearchAncientRes, error) {
