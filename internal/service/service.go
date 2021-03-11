@@ -7,10 +7,12 @@ import (
 	"github.com/hatlonely/go-kit/wrap"
 	"github.com/pkg/errors"
 
+	"github.com/hatlonely/rpc-ancient/api/gen/go/api"
 	"github.com/hatlonely/rpc-ancient/internal/storage"
 )
 
 type AncientService struct {
+	api.AncientServiceServer
 	mysqlCli *wrap.GORMDBWrapper
 	esCli    *wrap.ESClientWrapper
 	options  *Options

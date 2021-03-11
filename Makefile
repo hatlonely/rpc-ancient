@@ -28,10 +28,20 @@ vendor: go.mod go.sum
 
 .PHONY: codegen
 codegen: api/ancient.proto submodule
-	mkdir -p api/gen/go && mkdir -p api/gen/swagger
-	protoc -Irpc-api -I. --gofast_out api/gen/go --gofast_opt plugins=grpc,paths=source_relative $<
-	protoc -Irpc-api -I. --grpc-gateway_out api/gen/go --grpc-gateway_opt logtostderr=true,paths=source_relative $<
-	protoc -Irpc-api -I. --swagger_out api/gen/swagger --swagger_opt logtostderr=true $<
+	if [ ! -z "$(shell docker ps --filter name=protobuf -q)" ]; then \
+		docker stop protobuf; \
+	fi
+	docker run --name protobuf -d --rm hatlonely/protobuf:1.0.0 tail -f /dev/null
+	docker exec protobuf mkdir -p api
+	docker cp $< protobuf:/$<
+	docker cp rpc-api protobuf:/
+	docker exec protobuf bash -c "mkdir -p api/gen/go && mkdir -p api/gen/swagger"
+	docker exec protobuf bash -c "protoc -Irpc-api -I. --go_out api/gen/go --go_opt paths=source_relative $<"
+	docker exec protobuf bash -c "protoc -Irpc-api -I. --go-grpc_out api/gen/go --go-grpc_opt paths=source_relative $<"
+	docker exec protobuf bash -c "protoc -Irpc-api -I. --grpc-gateway_out api/gen/go --grpc-gateway_opt logtostderr=true,paths=source_relative $<"
+	docker exec protobuf bash -c "protoc -Irpc-api -I. --openapiv2_out api/gen/swagger --openapiv2_opt logtostderr=true $<"
+	docker cp protobuf:api/gen api
+	docker stop protobuf
 
 .PHONY: submodule
 submodule:
