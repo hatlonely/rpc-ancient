@@ -6,7 +6,11 @@
     "enableMetric": true,
     "enablePprof": true,
     "validators": ["Default"],
-    "pascalNameKey": false,
+    "usePascalNameLogKey": false,
+    "usePascalNameErrKey": false,
+    "marshalUseProtoNames": true,
+    "marshalEmitUnpopulated": false,
+    "unmarshalDiscardUnknown": true,
     "jaeger": {
       "serviceName": "rpc-ancient",
       "sampler": {

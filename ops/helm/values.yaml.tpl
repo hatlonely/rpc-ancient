@@ -23,7 +23,11 @@ config:
         "enableMetric": true,
         "enablePprof": true,
         "validators": ["Default"],
-        "pascalNameKey": true,
+        "usePascalNameLogKey": false,
+        "usePascalNameErrKey": false,
+        "marshalUseProtoNames": true,
+        "marshalEmitUnpopulated": false,
+        "unmarshalDiscardUnknown": true,
         "jaeger": {
           "serviceName": "rpc-ancient",
           "sampler": {
@@ -107,10 +111,13 @@ config:
           "writers": [{
             "type": "RotateFile",
             "rotateFileWriter": {
-              "filename": "log/${NAME}.rpc",
+              "filename": "log/app.rpc",
               "maxAge": "24h",
               "formatter": {
                 "type": "Json"
+                "options": {
+                  "flatMap": true
+                }
               }
             }
           }, {
@@ -132,7 +139,7 @@ config:
           "writers": [{
             "type": "RotateFile",
             "rotateFileWriter": {
-              "filename": "log/${NAME}.rpc",
+              "filename": "log/app.log",
               "maxAge": "24h",
               "formatter": {
                 "type": "Json"
