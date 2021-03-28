@@ -9,7 +9,9 @@ dep:
 env:
   default:
     NAME: "rpc-ancient"
+    IMAGE_TAG: "$(git describe --tags | awk '{print(substr($0,2,length($0)))}')"
   prod:
+    K8S_CONTEXT: "homek8s"
     NAMESPACE: "prod"
     REGISTRY_SERVER: "{{.registry.server}}"
     REGISTRY_USERNAME: "{{.registry.username}}"
@@ -26,11 +28,9 @@ env:
     REDIS_PASSWORD: "{{.redis.password}}"
     IMAGE_PULL_SECRET: "hatlonely-pull-secrets"
     IMAGE_REPOSITORY: "rpc-ancient"
-    IMAGE_TAG: "$(git describe --tags | awk '{print(substr($0,2,length($0)))}')"
     REPLICA_COUNT: 2
     INGRESS_HOST: "k8s.ancient.hatlonely.com"
     INGRESS_SECRET: "k8s-secret"
-    K8S_CONTEXT: "homek8s"
 
 task:
   image:
